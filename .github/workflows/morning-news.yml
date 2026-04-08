@@ -1,0 +1,38 @@
+name: Morning News Push
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'
+      timezone: 'Asia/Shanghai'
+
+permissions:
+  contents: read
+
+jobs:
+  push-morning-news:
+    runs-on: ubuntu-latest
+
+    env:
+      TENCENT_NEWS_API_KEY: ${{ secrets.TENCENT_NEWS_API_KEY }}
+      WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Tencent News CLI
+        shell: bash
+        run: |
+          curl -fsSL https://mat1.gtimg.com/qqcdn/qqnews/cli/hub/tencent-news/setup.sh | sh
+
+      - name: Configure API key
+        shell: bash
+        run: |
+          ~/.tencent-news-cli/bin/tencent-news-cli apikey-set "$TENCENT_NEWS_API_KEY"
+
+      - name: Send morning news
+        shell: bash
+        run: |
+          chmod +x scripts/send_morning_news.sh
+          scripts/send_morning_news.sh
