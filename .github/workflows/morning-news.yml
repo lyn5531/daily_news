@@ -3,7 +3,8 @@ name: Morning News Push
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '3 7 * * *'
+      timezone: 'Asia/Shanghai'
 
 permissions:
   contents: read
